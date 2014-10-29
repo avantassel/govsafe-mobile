@@ -36,6 +36,9 @@ angular.module('sociogram.controllers', [])
                         requestToken = (event.url).split("code=")[1];
                         $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + appId + "&client_secret=" + appSecret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
                             .success(function(data) {
+                                //set token to LS
+                                window.localStorage.setItem('token', data.access_token);
+
                                 accessToken = data.access_token;
                                 //$location.path("/person");
                                 $http.defaults.headers.post['Content-Type'] = 'application/json';
@@ -134,8 +137,11 @@ angular.module('sociogram.controllers', [])
             });
     })
 
-    .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading) {
-        debugger;
+    .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading, UserService) {
+        
+        UserService.getUser().then(function(data){
+            console.log(data);
+        });
         // $scope.show = function() {
         //     $scope.loading = $ionicLoading.show({
         //         content: 'Loading feed...'
