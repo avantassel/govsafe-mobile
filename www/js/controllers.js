@@ -19,22 +19,19 @@ angular.module('sociogram.controllers', [])
 
     })
 
-    .controller('LoginCtrl', function ($scope, $state, $location, $http) {
+    .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
 
         $scope.civicIdLogin = function () {
 
-            var appId = '635490299385961322',
-            appSecret = '5ab5b9c806984bfb8f69f83cc7abf324';
-
             $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-            $http.defaults.headers.post['x-accela-appid'] = appId;
+            $http.defaults.headers.post['x-accela-appid'] = API_VARS.client_id;
 
             $scope.login = function() {
-                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + appId, '_blank');
+                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
                 ref.addEventListener('loadstart', function(event) { 
                     if((event.url).startsWith("http://localhost:8100")) {
                         requestToken = (event.url).split("code=")[1];
-                        $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + appId + "&client_secret=" + appSecret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
+                        $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + API_VARS.client_id + "&client_secret=" + API_VARS.client_secret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
                             .success(function(data) {
                                 //set token to LS
                                 window.localStorage.setItem('token', data.access_token);
