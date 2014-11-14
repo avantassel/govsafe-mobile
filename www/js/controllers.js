@@ -140,7 +140,7 @@ angular.module('govsafe.controllers', [])
         $scope.dac_chosen = '';
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.center = '';
-        $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-c"></i>');
+        $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
 
@@ -188,7 +188,14 @@ angular.module('govsafe.controllers', [])
         //         });
         // }
 
-        // $scope.doRefresh = loadFeed;
+        $scope.doRefresh = function(){
+            $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
+            UserService.locateUser().then(function(data){
+                $scope.loc = data.loc.latitude+','+data.loc.longitude;
+                $scope.address = data.address;
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        };
 
         // loadFeed();
 

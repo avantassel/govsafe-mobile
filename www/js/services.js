@@ -71,11 +71,10 @@ angular.module('govsafe.services', [])
 		    var s_userLocation = window.localStorage.getItem('location');
 		    var s_userAddress = window.localStorage.getItem('address');
 
+		    //if we have the location in storage use that
 	        if(s_userLocation){
-	        	console.log(s_userAddress);
 	          q.resolve( {'loc':JSON.parse(s_userLocation), 'address': s_userAddress} );
 	        } else if(userLocation==null){
-
 	          $cordovaGeolocation
 	            .getCurrentPosition()
 	            .then(function(position) {
@@ -85,6 +84,7 @@ angular.module('govsafe.services', [])
 	              //get address
 	              $http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+s_userLocation.latitude+','+s_userLocation.longitude ).then(function(response){
       				if(response.data.results && response.data.results.length > 0 && response.data.results[0].formatted_address){
+      					//save to local storage
       					window.localStorage.setItem('address', response.data.results[0].formatted_address);
       					s_userAddress=response.data.results[0].formatted_address;
       				}
@@ -100,16 +100,6 @@ angular.module('govsafe.services', [])
 	          q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	        }
 	        return q.promise;
-      },
-      geoCode: function(latlng){
-      	$http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+latlng ).then(function(response){
-      		if(response.results && response.results.length > 0 && response.results[0].formatted_address){
-      			window.localStorage.setItem('address', response.results[0].formatted_address);
-      			return response.results[0].formatted_address;
-      		}
-      	}, function(){
-      		return '';
-      	});
       }
 	};
 });
