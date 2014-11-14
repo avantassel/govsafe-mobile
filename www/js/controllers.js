@@ -141,6 +141,7 @@ angular.module('govsafe.controllers', [])
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.center = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
+        $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
 
@@ -153,6 +154,10 @@ angular.module('govsafe.controllers', [])
             $scope.loc = data.loc.latitude+','+data.loc.longitude;
             $scope.address = data.address;
         });
+
+        // UserService.getDAC().then(function(data){
+        //     $scope.dacs = data;
+        // });
 
         $scope.nextSlide = function() {
             $ionicSlideBoxDelegate.next();

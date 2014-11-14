@@ -1,7 +1,7 @@
 angular.module('govsafe.services', [])
 .service('UserService', function(API_VARS,$http,$q,$rootScope,$cordovaGeolocation) {
 
-	var userLocation = null, userAddress = null;
+	var userLocation = null, userAddress = null, redcross_locations = {};
 
 
 	return {
@@ -64,6 +64,28 @@ angular.module('govsafe.services', [])
 	      return q.promise;
 	    },
 
+	    getDAC: function(){
+	    	var q = $q.defer();
+
+	    	var s_redCross = window.localStorage.getItem('redcross');
+
+	    	if(s_redCross)
+	    		q.resolve(JSON.parse(s_redCross));
+
+	    	//TODO move this to server side
+	    	$http.get('http://app.redcross.org/nss-app/pages/mapServicesList.jsp?action=list',{headers:{'Content-Type':'application/json'}}).then(function(response){
+	    		
+	    		if(response.data && response.data.Locations){
+	    			window.localStorage.setItem('address', response.data.Locations);
+	    			s_redCross = response.data.Locations;
+	    		}
+
+	    		q.resolve(s_redCross);
+	    	});
+
+	    	return q.promise;
+	    },
+
 	    locateUser: function(){
 
 	        var q = $q.defer();
@@ -74,14 +96,15 @@ angular.module('govsafe.services', [])
 		    //if we have the location in storage use that
 	        if(s_userLocation){
 	          q.resolve( {'loc':JSON.parse(s_userLocation), 'address': s_userAddress} );
-	        } else if(userLocation==null){
+	        } else if(!userLocation){
 	          $cordovaGeolocation
 	            .getCurrentPosition()
 	            .then(function(position) {
 	              //save to local storage
 	              window.localStorage.setItem('location', JSON.stringify(position.coords));
-	              s_userLocation = position.coords ;
-	              //get address
+	              s_userLocation = position.coords;
+	              // get address
+	              // https://developers.google.com/maps/documentation/geocoding/#ReverseGeocoding
 	              $http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+s_userLocation.latitude+','+s_userLocation.longitude ).then(function(response){
       				if(response.data.results && response.data.results.length > 0 && response.data.results[0].formatted_address){
       					//save to local storage

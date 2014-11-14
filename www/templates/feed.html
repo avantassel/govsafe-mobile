@@ -24,7 +24,7 @@
                         </div>
                       </div>
                 </div>
-                <button ng-click="nextSlide()">Start</button>
+                <button ng-click="nextSlide()" class="button button-balanced">Start</button>
             </div>
           </ion-slide>
           <ion-slide>
@@ -32,8 +32,16 @@
                 <p>
                     Choose a Disaster Assistance Centers near you.
                 </p>
-                <button ng-click="prevSlide()">Back</button>
-                <button ng-click="nextSlide()">Continue</button>
+                <div class="list">
+                  <label class="item item-input item-select">
+                    <select ng-repeat="dac in dacs" ng-model="center">
+                      <option value="{{dac.name}}">{{dac.name}}</option>
+                    </select>
+                  </label>
+
+                </div>
+                <button ng-click="prevSlide()" class="button button-calm">Back</button>
+                <button ng-click="nextSlide()" class="button button-balanced">Continue</button>
             </div>
           </ion-slide>
           <ion-slide>
@@ -41,8 +49,8 @@
                 <p>
                     Let the {{dac_chosen}} know when you will be arriving and complete the required for with your basic information.
                 </p>
-                <button ng-click="prevSlide()">Back</button>
-                <a class="typeform-share button" id="start-form" href="https://avantassel.typeform.com/to/ToheBD" data-mode="1" target="_self">Finish</a>
+                <button ng-click="prevSlide()" class="button button-calm">Back</button>
+                <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD" data-mode="1" target="_self">Finish</a>
             </div>
           </ion-slide>
         </ion-slide-box>
