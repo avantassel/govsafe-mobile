@@ -1,5 +1,7 @@
 angular.module('govsafe.services', [])
-.service('UserService', function(API_VARS,$http,$q,$rootScope) {
+.service('UserService', function(API_VARS,$http,$q,$rootScope,$cordovaGeolocation) {
+
+	var userLocation = null;
 
 	return {
 	// getUser response
@@ -59,6 +61,35 @@ angular.module('govsafe.services', [])
 	        });
 	      
 	      return q.promise;
-	    }
+	    },
+
+	    locateUser: function(){
+
+	        var q = $q.defer();
+
+	        //check local storage
+		    var userLocation = window.localStorage.getItem('location');
+
+	        if(userLocation){
+	          userLocation = JSON.parse(userLocation);
+	          q.resolve( userLocation );
+	        } else if(userLocation==null){
+
+	          $cordovaGeolocation
+	            .getCurrentPosition()
+	            .then(function(position) {
+	              //save to local storage
+	              window.localStorage.setItem('location', JSON.stringify(position.coords));
+	              userLocation = position.coords ;
+	              q.resolve( userLocation );
+	          }, function(err) {
+	            q.reject( userLocation );
+	          });
+
+	        } else {
+	          q.resolve( userLocation );
+	        }
+	        return q.promise;
+      }
 	};
 });

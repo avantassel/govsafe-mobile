@@ -134,11 +134,22 @@ angular.module('govsafe.controllers', [])
             });
     })
 
-    .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading, UserService) {
+    .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
         
+        $scope.step = 1;
+        $scope.dac_chosen = '';
+
         UserService.getUser({}).then(function(data){
             console.log(data);
         });
+
+        $scope.nextSlide = function() {
+            $ionicSlideBoxDelegate.next();
+          }
+
+        $scope.prevSlide = function() {
+            $ionicSlideBoxDelegate.previous();
+          }
         // $scope.show = function() {
         //     $scope.loading = $ionicLoading.show({
         //         content: 'Loading feed...'

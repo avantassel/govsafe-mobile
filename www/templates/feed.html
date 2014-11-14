@@ -6,12 +6,43 @@
 
     <ion-content has-header="true" padding="true">
 
-        <ion-refresher
+        <!-- <ion-refresher
                 pulling-text="Pull to refresh..."
                 on-refresh="doRefresh()">
-        </ion-refresher>
+        </ion-refresher> -->
 
-        <div ng-repeat="item in items" class="list card">
+        <ion-slide-box on-slide-changed="slideHasChanged($index)">
+          <ion-slide>
+            <div class="box blue"><h1>Step 1</h1>
+                <div class="list card">
+                    <p>
+                        Let us locate you to find the nearest Disaster Assistance Centers.
+                    </p>
+                </div>
+                <button ng-click="nextSlide()">Start</button>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box yellow"><h1>Step 2</h1>
+                <p>
+                    Choose a Disaster Assistance Centers near you.
+                </p>
+                <button ng-click="prevSlide()">Back</button>
+                <button ng-click="nextSlide()">Continue</button>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box yellow"><h1>Step 3</h1>
+                <p>
+                    Let the {{dac_chosen}} know when you will be arriving and complete the required for with your basic information.
+                </p>
+                <button ng-click="prevSlide()">Back</button>
+                <button ng-click="nextSlide()">Finish</button>
+            </div>
+          </ion-slide>
+        </ion-slide-box>
+
+        <!-- <div ng-repeat="item in items" class="list card">
             <div class="item item-avatar">
                 <img src="https://graph.facebook.com/{{ item.from.id }}/picture"/>
                 <h2>{{item.from.name}}</h2>
@@ -25,7 +56,7 @@
                 <img ng-if="item.picture" ng-src="{{ item.picture }}"/>
 
             </div>
-        </div>
+        </div> -->
 
     </ion-content>
 
