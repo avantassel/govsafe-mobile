@@ -139,7 +139,7 @@ angular.module('govsafe.controllers', [])
         $scope.step = 1;
         $scope.dac_chosen = '';
         $scope.loc = ''; //loc=lat+','+lng;
-        $scope.center = '';
+        $scope.dac_selected = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
         $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
         $scope.refreshText = 'Pull to get your location...';
@@ -176,7 +176,7 @@ angular.module('govsafe.controllers', [])
             $ionicSlideBoxDelegate.next();
             updateRefreshText($ionicSlideBoxDelegate.currentIndex());
             //update typeform href with vars
-            typeform.attr('href','https://avantassel.typeform.com/to/ToheBD?location='+$scope.loc+'&center='+$scope.center);
+            typeform.attr('href','https://avantassel.typeform.com/to/ToheBD?location='+$scope.loc+'&center='+$scope.dac_selected);
           }
 
         $scope.prevSlide = function() {
