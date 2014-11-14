@@ -134,12 +134,13 @@ angular.module('govsafe.controllers', [])
             });
     })
 
-    .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
+    .controller('FeedCtrl', function ($scope, $sce, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
         
         $scope.step = 1;
         $scope.dac_chosen = '';
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.center = '';
+        $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-c"></i>');
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
 
@@ -149,7 +150,8 @@ angular.module('govsafe.controllers', [])
         });
 
         UserService.locateUser().then(function(data){
-            $scope.loc = data.latitude+','+data.longitude;
+            $scope.loc = data.loc.latitude+','+data.loc.longitude;
+            $scope.address = data.address;
         });
 
         $scope.nextSlide = function() {

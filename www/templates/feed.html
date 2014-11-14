@@ -18,6 +18,11 @@
                     <p>
                         Let us locate you to find the nearest Disaster Assistance Centers.
                     </p>
+                    <div class="card">
+                        <div class="item item-text-wrap">
+                          <p class="address" ng-show="address" data-ng-bind-html="address">{{address}}</p>
+                        </div>
+                      </div>
                 </div>
                 <button ng-click="nextSlide()">Start</button>
             </div>

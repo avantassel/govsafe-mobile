@@ -1,7 +1,8 @@
 angular.module('govsafe.services', [])
 .service('UserService', function(API_VARS,$http,$q,$rootScope,$cordovaGeolocation) {
 
-	var userLocation = null;
+	var userLocation = null, userAddress = null;
+
 
 	return {
 	// getUser response
@@ -66,13 +67,13 @@ angular.module('govsafe.services', [])
 	    locateUser: function(){
 
 	        var q = $q.defer();
-
 	        //check local storage
-		    var userLocation = window.localStorage.getItem('location');
+		    var s_userLocation = window.localStorage.getItem('location');
+		    var s_userAddress = window.localStorage.getItem('address');
 
-	        if(userLocation){
-	          userLocation = JSON.parse(userLocation);
-	          q.resolve( userLocation );
+	        if(s_userLocation){
+	        	console.log(s_userAddress);
+	          q.resolve( {'loc':JSON.parse(s_userLocation), 'address': s_userAddress} );
 	        } else if(userLocation==null){
 
 	          $cordovaGeolocation
@@ -80,16 +81,35 @@ angular.module('govsafe.services', [])
 	            .then(function(position) {
 	              //save to local storage
 	              window.localStorage.setItem('location', JSON.stringify(position.coords));
-	              userLocation = position.coords ;
-	              q.resolve( userLocation );
+	              s_userLocation = position.coords ;
+	              //get address
+	              $http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+s_userLocation.latitude+','+s_userLocation.longitude ).then(function(response){
+      				if(response.data.results && response.data.results.length > 0 && response.data.results[0].formatted_address){
+      					window.localStorage.setItem('address', response.data.results[0].formatted_address);
+      					s_userAddress=response.data.results[0].formatted_address;
+      				}
+	              	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
+	              }, function(){
+	              	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
+	              });
 	          }, function(err) {
-	            q.reject( userLocation );
+	            q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	          });
 
 	        } else {
-	          q.resolve( userLocation );
+	          q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	        }
 	        return q.promise;
+      },
+      geoCode: function(latlng){
+      	$http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+latlng ).then(function(response){
+      		if(response.results && response.results.length > 0 && response.results[0].formatted_address){
+      			window.localStorage.setItem('address', response.results[0].formatted_address);
+      			return response.results[0].formatted_address;
+      		}
+      	}, function(){
+      		return '';
+      	});
       }
 	};
 });
