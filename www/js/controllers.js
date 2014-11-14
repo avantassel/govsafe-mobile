@@ -142,6 +142,7 @@ angular.module('govsafe.controllers', [])
         $scope.center = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
         $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
+        $scope.refreshText = 'Pull to get your location...';
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
 
@@ -158,15 +159,29 @@ angular.module('govsafe.controllers', [])
         // UserService.getDAC().then(function(data){
         //     $scope.dacs = data;
         // });
+        function updateRefreshText(i){
+            if(i==0)
+                $scope.refreshText = 'Pull to get your location...';
+            else if(i==1)
+                $scope.refreshText = 'Pull to refresh Assistance Centers...';
+            else if(i==2)
+                $scope.refreshText = 'Pull to refresh your status and ETA...';
+        }
+
+        $scope.slideHasChanged = function($index){
+            // console.log($index);
+        }
 
         $scope.nextSlide = function() {
             $ionicSlideBoxDelegate.next();
+            updateRefreshText($ionicSlideBoxDelegate.currentIndex());
             //update typeform href with vars
             typeform.attr('href','https://avantassel.typeform.com/to/ToheBD?location='+$scope.loc+'&center='+$scope.center);
           }
 
         $scope.prevSlide = function() {
             $ionicSlideBoxDelegate.previous();
+            updateRefreshText($ionicSlideBoxDelegate.currentIndex());
           }
 
         // $scope.show = function() {
@@ -194,12 +209,28 @@ angular.module('govsafe.controllers', [])
         // }
 
         $scope.doRefresh = function(){
-            $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
-            UserService.locateUser().then(function(data){
-                $scope.loc = data.loc.latitude+','+data.loc.longitude;
-                $scope.address = data.address;
+            //update location
+            if($ionicSlideBoxDelegate.currentIndex() == 0){
+                $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
+                UserService.locateUser().then(function(data){
+                    $scope.loc = data.loc.latitude+','+data.loc.longitude;
+                    $scope.address = data.address;
+                    $scope.$broadcast('scroll.refreshComplete');
+                },function(){
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+            } else if($ionicSlideBoxDelegate.currentIndex() == 1){
+                // UserService.getDAC().then(function(data){
+                //     $scope.dacs = data;
+                //     $scope.$broadcast('scroll.refreshComplete');
+                // },function(){
+                //     $scope.$broadcast('scroll.refreshComplete');
+                // });
                 $scope.$broadcast('scroll.refreshComplete');
-            });
+            } else if($ionicSlideBoxDelegate.currentIndex() == 2){
+                // TODO look up user status
+                $scope.$broadcast('scroll.refreshComplete');
+            }
         };
 
         // loadFeed();
