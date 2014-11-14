@@ -138,18 +138,30 @@ angular.module('govsafe.controllers', [])
         
         $scope.step = 1;
         $scope.dac_chosen = '';
+        $scope.loc = ''; //loc=lat+','+lng;
+        $scope.center = '';
 
+        var typeform = angular.element( document.querySelector( '#start-form' ) )
+
+        //TODO, wire this up or something
         UserService.getUser({}).then(function(data){
             console.log(data);
         });
 
+        UserService.locateUser().then(function(data){
+            $scope.loc = data.latitude+','+data.longitude;
+        });
+
         $scope.nextSlide = function() {
             $ionicSlideBoxDelegate.next();
+            //update typeform href with vars
+            typeform.attr('href','https://avantassel.typeform.com/to/ToheBD?location='+$scope.loc+'&center='+$scope.center);
           }
 
         $scope.prevSlide = function() {
             $ionicSlideBoxDelegate.previous();
           }
+
         // $scope.show = function() {
         //     $scope.loading = $ionicLoading.show({
         //         content: 'Loading feed...'

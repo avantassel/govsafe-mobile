@@ -13,7 +13,7 @@
 
         <ion-slide-box on-slide-changed="slideHasChanged($index)">
           <ion-slide>
-            <div class="box blue"><h1>Step 1</h1>
+            <div class="box blue"><h1>Step <span class="positive-bg positive-border step-count">1</span></h1>
                 <div class="list card">
                     <p>
                         Let us locate you to find the nearest Disaster Assistance Centers.
@@ -23,7 +23,7 @@
             </div>
           </ion-slide>
           <ion-slide>
-            <div class="box yellow"><h1>Step 2</h1>
+            <div class="box yellow"><h1>Step <span class="positive-bg positive-border step-count">2</span></h1>
                 <p>
                     Choose a Disaster Assistance Centers near you.
                 </p>
@@ -32,12 +32,12 @@
             </div>
           </ion-slide>
           <ion-slide>
-            <div class="box yellow"><h1>Step 3</h1>
+            <div class="box yellow"><h1>Step <span class="positive-bg positive-border step-count">3</span></h1>
                 <p>
                     Let the {{dac_chosen}} know when you will be arriving and complete the required for with your basic information.
                 </p>
                 <button ng-click="prevSlide()">Back</button>
-                <button ng-click="nextSlide()">Finish</button>
+                <a class="typeform-share button" id="start-form" href="https://avantassel.typeform.com/to/ToheBD" data-mode="1" target="_self">Finish</a>
             </div>
           </ion-slide>
         </ion-slide-box>

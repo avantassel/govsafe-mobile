@@ -11,3 +11,11 @@
     margin-top: 0;
     margin-bottom: 4px;
 }
+
+.step-count {
+	border-radius:25px;
+  -moz-border-radius:25px;
+  -webkit-border-radius:25px;
+  padding: 10px 10px 5px 10px;
+  color: #FFF;
+}
