@@ -1,4 +1,4 @@
-angular.module('sociogram', ['ionic', 'openfb', 'sociogram.controllers'])
+angular.module('govsafe', ['ionic', 'openfb', 'govsafe.services','govsafe.controllers'])
     .constant('API_VARS',{host:'https://apis.accela.com/v3',client_id:'635490299385961322',client_secret:'5ab5b9c806984bfb8f69f83cc7abf324'})
     .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
 

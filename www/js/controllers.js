@@ -1,4 +1,4 @@
-angular.module('sociogram.controllers', [])
+angular.module('govsafe.controllers', [])
 
     .controller('AppCtrl', function ($scope, $state, OpenFB) {
 
@@ -136,7 +136,7 @@ angular.module('sociogram.controllers', [])
 
     .controller('FeedCtrl', function ($scope, $stateParams, $ionicLoading, UserService) {
         
-        UserService.getUser().then(function(data){
+        UserService.getUser({}).then(function(data){
             console.log(data);
         });
         // $scope.show = function() {

@@ -1,5 +1,5 @@
-angular.module('sociogram.services', [])
-.factory('UserService', function(API_VARS,$http,$q,$rootScope) {
+angular.module('govsafe.services', [])
+.service('UserService', function(API_VARS,$http,$q,$rootScope) {
 
 	return {
 	// getUser response
@@ -29,7 +29,7 @@ angular.module('sociogram.services', [])
 	     
 	     	//get token from LS
 	     	var token = window.localStorage.getItem('token');
-	     	$http.defaults.headers.get['Authorization'] = token;
+	     	// $http.defaults.headers.get['Authorization'] = token;
 
 	        $http.get(API_VARS.host+'/users/me',{params: args}).then(function(response){
 
@@ -59,6 +59,6 @@ angular.module('sociogram.services', [])
 	        });
 	      
 	      return q.promise;
-	    };
-	}
-};
+	    }
+	};
+});
