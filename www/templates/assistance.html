@@ -1,4 +1,4 @@
-<ion-view title="Assistance" hide-back-button="true">
+<ion-view title="Get Assistance" hide-back-button="true">
 
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -11,7 +11,7 @@
                 on-refresh="doRefresh()">
         </ion-refresher>
 
-        <ion-slide-box on-slide-changed="slideHasChanged($index)">
+        <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
           <ion-slide>
             <div class="box">
 
@@ -46,6 +46,8 @@
                 <div class="card">
                     <div class="item item-text-wrap">
                         <br/>Choose a Disaster Assistance Centers near you.
+                        <p>Below are currently active RedCross centers that are available.</p>
+                        <p>Updated: {{dac_updated}}</p>
                     </div>
                 </div>
 
@@ -67,7 +69,10 @@
                   <label class="item item-radio" ng-repeat="dac in dacs">
                     <input type="radio" name="center" ng-model="$parent.dac_selected" value="{{dac.name}}">
                     <div class="item-content">
-                      <strong>{{dac.name}}</strong> <i ng-show="dac.distance"><br/>({{dac.distance}} mi away)</i>
+                      <strong>{{dac.name}}</strong> 
+                      <p><i ng-show="dac.distance"><br/>({{dac.distance}} away)</i>
+                      <br/>{{dac.addr1}}, {{dac.city}}, {{dac.state}}
+                      <br/><span ng-show="dac.population && dac.capacity">Capacity: {{dac.population}} / {{dac.capacity}} - {{(dac.population/dac.capacity)*100 | round}}%</span></p>
                     </div>
                     <i class="radio-icon ion-checkmark"></i>
                   </label>
@@ -87,7 +92,7 @@
                     <div class="card">
                         <div class="item item-text-wrap" ng-show="dac_selected">
                             <br/>Click Finish to complete the assistance form.
-                            <p>This will notify the "{{dac_selected}}" center of your needs and ETA.</p>
+                            <p>This will notify the <strong>"{{dac_selected}}"</strong> center of your needs and ETA.</p>
                         </div>
                         <div class="item item-text-wrap" ng-show="!dac_selected">
                             <br/>Click Finish to complete the assistance form.

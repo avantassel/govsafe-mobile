@@ -98,6 +98,7 @@ angular.module('govsafe.controllers', [])
         $scope.dac_chosen = '';
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.dac_selected = '';
+        $scope.dac_updated = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
         $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Andrew's Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11},{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
         $scope.refreshText = 'Pull to get your location...';
@@ -109,14 +110,27 @@ angular.module('govsafe.controllers', [])
             console.log(data);
         });
 
-        UserService.locateUser().then(function(data){
-            $scope.loc = data.loc.latitude+','+data.loc.longitude;
-            $scope.address = data.address;
-        });
+        $scope.locateUser = function(refresh){
+            UserService.locateUser(refresh).then(function(data){
+                $scope.loc = data.loc.latitude+','+data.loc.longitude;
+                $scope.address = data.address;
+                $scope.$broadcast('scroll.refreshComplete');
+            },function(){
+                $scope.$broadcast('scroll.refreshComplete');
+            });    
+        }
 
-        UserService.getDAC().then(function(data){
-            $scope.dacs = data;
-        });
+        $scope.getDAC = function(refresh){
+            UserService.getDAC(refresh).then(function(data){
+                if(data.centers)
+                    $scope.dacs = data.centers;
+                if(data.meta.updated)
+                    $scope.dac_updated = data.meta.updated;
+                $scope.$broadcast('scroll.refreshComplete');
+            },function(){
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        }
 
         function updateRefreshText(i){
             if(i==0)
@@ -145,25 +159,16 @@ angular.module('govsafe.controllers', [])
             //update location
             if($ionicSlideBoxDelegate.currentIndex() == 0){
                 $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
-                UserService.locateUser(true).then(function(data){
-                    $scope.loc = data.loc.latitude+','+data.loc.longitude;
-                    $scope.address = data.address;
-                    $scope.$broadcast('scroll.refreshComplete');
-                },function(){
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
+                $scope.locateUser(true);
             } else if($ionicSlideBoxDelegate.currentIndex() == 1){
-                UserService.getDAC().then(function(data){
-                    $scope.dacs = data;
-                    $scope.$broadcast('scroll.refreshComplete');
-                },function(){
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
-                $scope.$broadcast('scroll.refreshComplete');
+                $scope.getDAC(true);
             } else if($ionicSlideBoxDelegate.currentIndex() == 2){
                 // TODO look up user status
                 $scope.$broadcast('scroll.refreshComplete');
             }
         };
+
+        $scope.locateUser();
+        $scope.getDAC();
 
     });

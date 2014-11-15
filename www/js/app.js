@@ -3,6 +3,9 @@ angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','g
     .filter('escape', function() {
         return window.escape;
     })
+    .filter('round', function() {
+        return Math.round;
+    })
     .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
 
         //OpenFB.init('594364694019603','http://localhost:8100/oauthcallback.html', $window.sessionStorage);

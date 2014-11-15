@@ -64,28 +64,33 @@ angular.module('govsafe.services', [])
 	      return q.promise;
 	    },
 
-	    getDAC: function(){
+	    getDAC: function(refresh){
 	    	var q = $q.defer();
 
 	    	var query = '';
-	    	var s_redCross = null;//window.localStorage.getItem('centers');
+	    	var s_redCross = window.localStorage.getItem('centers');
 
-	    	if(s_redCross)
+	    	if(!refresh && s_redCross){
 	    		q.resolve(JSON.parse(s_redCross));
+	    	} else {
 
-	    	if(userLocation && userLocation.latitude && userLocation.longitude) 
-	    		query = '?ll='+userLocation.latitude+','+userLocation.longitude
+		    	if(userLocation && userLocation.latitude && userLocation.longitude) 
+		    		query = '?ll='+userLocation.latitude+','+userLocation.longitude
 
-	    	//TODO move this to server side
-	    	$http.get('http://www.govsafe.org/dac.php'+query,{headers:{'Content-Type':'application/json'}}).then(function(response){
-	    		
-	    		if(response.data && response.data.centers){
-	    			window.localStorage.setItem('centers', JSON.stringify(response.data.centers));
-	    			s_redCross = response.data.centers;
-	    		}
+		    	//TODO move this to server side
+		    	$http.get('http://www.govsafe.org/dac.php'+query,{headers:{'Content-Type':'application/json'}}).then(function(response){
+		    		
+		    		if(response.data && response.data.centers){
+		    			if(refresh)
+		    				response.data.meta.updated = new Date().toString();
 
-	    		q.resolve(s_redCross);
-	    	});
+		    			window.localStorage.setItem('centers', JSON.stringify(response.data));
+		    			s_redCross = response.data;
+		    		}
+
+		    		q.resolve(s_redCross);
+		    	});
+		    }
 
 	    	return q.promise;
 	    },
