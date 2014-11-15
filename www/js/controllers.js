@@ -86,55 +86,13 @@ angular.module('govsafe.controllers', [])
 
     })
 
-    .controller('ShareCtrl', function ($scope, OpenFB) {
-
-        $scope.item = {};
-
-        $scope.share = function () {
-            OpenFB.post('/me/feed', $scope.item)
-                .success(function () {
-                    $scope.status = "This item has been shared on OpenFB";
-                })
-                .error(function(data) {
-                    alert(data.error.message);
-                });
-        };
-
-    })
-
     .controller('ProfileCtrl', function ($scope, OpenFB) {
         OpenFB.get('/me').success(function (user) {
             $scope.user = user;
         });
     })
 
-    .controller('PersonCtrl', function ($scope, $stateParams, OpenFB) {
-        OpenFB.get('/' + $stateParams.personId).success(function (user) {
-            $scope.user = user;
-        });
-    })
-
-    .controller('FriendsCtrl', function ($scope, $stateParams, OpenFB) {
-        OpenFB.get('/' + $stateParams.personId + '/friends', {limit: 50})
-            .success(function (result) {
-                $scope.friends = result.data;
-            })
-            .error(function(data) {
-                alert(data.error.message);
-            });
-    })
-
-    .controller('MutualFriendsCtrl', function ($scope, $stateParams, OpenFB) {
-        OpenFB.get('/' + $stateParams.personId + '/mutualfriends', {limit: 50})
-            .success(function (result) {
-                $scope.friends = result.data;
-            })
-            .error(function(data) {
-                alert(data.error.message);
-            });
-    })
-
-    .controller('FeedCtrl', function ($scope, $sce, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
+    .controller('AssistanceCtrl', function ($scope, $sce, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
         
         $scope.step = 1;
         $scope.dac_chosen = '';
@@ -182,11 +140,6 @@ angular.module('govsafe.controllers', [])
             $ionicSlideBoxDelegate.previous();
             updateRefreshText($ionicSlideBoxDelegate.currentIndex());
           }
-
-          $scope.$watch('dac_selected', function (newVal, oldVal) {
-                if(newVal)
-                    $scope.dac_selected=newVal;
-          });
         
         $scope.doRefresh = function(){
             //update location

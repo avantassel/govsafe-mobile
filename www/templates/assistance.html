@@ -1,0 +1,106 @@
+<ion-view title="Assistance" hide-back-button="true">
+
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" padding="true">
+
+        <ion-refresher
+                pulling-text="{{refreshText}}"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+
+        <ion-slide-box on-slide-changed="slideHasChanged($index)">
+          <ion-slide>
+            <div class="box">
+
+            <div class="bar bar-header bar-dark">
+              <h1 class="title">Step <span class="positive-bg positive-border step-count">1</span></h1>
+            </div>
+            
+                <div class="list">
+                    <div class="card">
+                        <div class="item item-text-wrap">
+                            <br/>Let us locate you to find the nearest Disaster Assistance Centers.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="item item-text-wrap">
+                          <p class="address" ng-show="address" data-ng-bind-html="address">{{address}}</p>
+                        </div>
+                        <div class="item">
+                        <img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{address|escape}}&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7C{{loc}}" width="100%" height="100%"/>
+                        </div>
+                      </div>
+                </div>
+                <button ng-click="nextSlide()" class="button button-balanced">Start</button>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box">
+                <div class="bar bar-header bar-dark">
+                    <h1 class="title">Step <span class="positive-bg positive-border step-count">2</span></h1>
+                </div>
+            
+                <div class="card">
+                    <div class="item item-text-wrap">
+                        <br/>Choose a Disaster Assistance Centers near you.
+                    </div>
+                </div>
+
+                <div class="list">
+                  <!-- <label class="item item-input item-select">
+                    <select ng-options="dac.name+' ('+dac.distance+' away)' for dac in dacs" ng-model="dac_selected">
+                        <option value="">Choose a Center</option>
+                    </select>
+                  </label> -->
+
+                  <label class="item item-radio" >
+                    <input type="radio" name="center" ng-model="dac_selected" value="">
+                    <div class="item-content">
+                      No Center
+                    </div>
+                    <i class="radio-icon ion-checkmark"></i>
+                  </label>
+
+                  <label class="item item-radio" ng-repeat="dac in dacs">
+                    <input type="radio" name="center" ng-model="$parent.dac_selected" value="{{dac.name}}">
+                    <div class="item-content">
+                      <strong>{{dac.name}}</strong> <i ng-show="dac.distance"><br/>({{dac.distance}} mi away)</i>
+                    </div>
+                    <i class="radio-icon ion-checkmark"></i>
+                  </label>
+
+                </div>
+                <button ng-click="prevSlide()" class="button button-stable">Back</button>
+                <button ng-click="nextSlide()" class="button button-balanced">Continue</button>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box">
+                <div class="bar bar-header bar-dark">
+                    <h1 class="title">Step <span class="positive-bg positive-border step-count">3</span></h1>
+                </div>
+                
+                <div class="list">
+                    <div class="card">
+                        <div class="item item-text-wrap" ng-show="dac_selected">
+                            <br/>Click Finish to complete the assistance form.
+                            <p>This will notify the "{{dac_selected}}" center of your needs and ETA.</p>
+                        </div>
+                        <div class="item item-text-wrap" ng-show="!dac_selected">
+                            <br/>Click Finish to complete the assistance form.
+                        </div>
+                    </div>
+                </div>
+                <button ng-click="prevSlide()" class="button button-stable">Back</button>
+
+                <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD?address={{address | escape}}&location={{loc}}&center={{dac_selected | escape}}" data-mode="1" target="_self">Finish</a>
+            </div>
+          </ion-slide>
+        </ion-slide-box>
+
+    </ion-content>
+
+</ion-view>

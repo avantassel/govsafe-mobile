@@ -66,55 +66,18 @@ angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','g
                 }
             })
 
-            .state('app.share', {
-                url: "/share",
+            .state('app.assistance', {
+                url: "/assistance",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/share.html",
-                        controller: "ShareCtrl"
-                    }
-                }
-            })
-
-            .state('app.friends', {
-                url: "/person/:personId/friends",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/friend-list.html",
-                        controller: "FriendsCtrl"
-                    }
-                }
-            })
-            .state('app.mutualfriends', {
-                url: "/person/:personId/mutualfriends",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/mutual-friend-list.html",
-                        controller: "MutualFriendsCtrl"
-                    }
-                }
-            })
-            .state('app.person', {
-                url: "/person/:personId",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/person.html",
-                        controller: "PersonCtrl"
-                    }
-                }
-            })
-            .state('app.feed', {
-                url: "/person/:personId/feed",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/feed.html",
-                        controller: "FeedCtrl"
+                        templateUrl: "templates/assistance.html",
+                        controller: "AssistanceCtrl"
                     }
                 }
             });
 
         // fallback route
-        $urlRouterProvider.otherwise('/app/person/me/feed');
+        $urlRouterProvider.otherwise('/app/assistance');
 
     });
 
