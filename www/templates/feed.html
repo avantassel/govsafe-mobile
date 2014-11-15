@@ -22,6 +22,9 @@
                         <div class="item item-text-wrap">
                           <p class="address" ng-show="address" data-ng-bind-html="address">{{address}}</p>
                         </div>
+                        <div class="item">
+                        <img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{address|escape}}&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7C{{loc}}" width="100%" height="100%"/>
+                        </div>
                       </div>
                 </div>
                 <button ng-click="nextSlide()" class="button button-balanced">Start</button>
