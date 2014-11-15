@@ -156,9 +156,9 @@ angular.module('govsafe.controllers', [])
             $scope.address = data.address;
         });
 
-        // UserService.getDAC().then(function(data){
-        //     $scope.dacs = data;
-        // });
+        UserService.getDAC().then(function(data){
+            $scope.dacs = data;
+        });
 
         function updateRefreshText(i){
             if(i==0)
@@ -187,31 +187,7 @@ angular.module('govsafe.controllers', [])
                 if(newVal)
                     $scope.dac_selected=newVal;
           });
-
-        // $scope.show = function() {
-        //     $scope.loading = $ionicLoading.show({
-        //         content: 'Loading feed...'
-        //     });
-        // };
-        // $scope.hide = function(){
-        //     $scope.loading.hide();
-        // };
-
-        // function loadFeed() {
-        //     $scope.show();
-        //     OpenFB.get('/' + $stateParams.personId + '/home', {limit: 30})
-        //         .success(function (result) {
-        //             $scope.hide();
-        //             $scope.items = result.data;
-        //             // Used with pull-to-refresh
-        //             $scope.$broadcast('scroll.refreshComplete');
-        //         })
-        //         .error(function(data) {
-        //             $scope.hide();
-        //             alert(data.error.message);
-        //         });
-        // }
-
+        
         $scope.doRefresh = function(){
             //update location
             if($ionicSlideBoxDelegate.currentIndex() == 0){
@@ -236,7 +212,5 @@ angular.module('govsafe.controllers', [])
                 $scope.$broadcast('scroll.refreshComplete');
             }
         };
-
-        // loadFeed();
 
     });
