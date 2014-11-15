@@ -67,17 +67,21 @@ angular.module('govsafe.services', [])
 	    getDAC: function(){
 	    	var q = $q.defer();
 
-	    	var s_redCross = window.localStorage.getItem('redcross');
+	    	var query = '';
+	    	var s_redCross = null;//window.localStorage.getItem('centers');
 
 	    	if(s_redCross)
 	    		q.resolve(JSON.parse(s_redCross));
 
+	    	if(userLocation && userLocation.latitude && userLocation.longitude) 
+	    		query = '?ll='+userLocation.latitude+','+userLocation.longitude
+
 	    	//TODO move this to server side
-	    	$http.get('http://app.redcross.org/nss-app/pages/mapServicesList.jsp?action=list',{headers:{'Content-Type':'application/json'}}).then(function(response){
+	    	$http.get('http://www.govsafe.org/dac.php'+query,{headers:{'Content-Type':'application/json'}}).then(function(response){
 	    		
-	    		if(response.data && response.data.Locations){
-	    			window.localStorage.setItem('address', response.data.Locations);
-	    			s_redCross = response.data.Locations;
+	    		if(response.data && response.data.centers){
+	    			window.localStorage.setItem('centers', JSON.stringify(response.data.centers));
+	    			s_redCross = response.data.centers;
 	    		}
 
 	    		q.resolve(s_redCross);
@@ -86,7 +90,7 @@ angular.module('govsafe.services', [])
 	    	return q.promise;
 	    },
 
-	    locateUser: function(){
+	    locateUser: function(refresh){
 
 	        var q = $q.defer();
 	        //check local storage
@@ -94,9 +98,11 @@ angular.module('govsafe.services', [])
 		    var s_userAddress = window.localStorage.getItem('address');
 
 		    //if we have the location in storage use that
-	        if(s_userLocation){
+	        if(!refresh && s_userLocation && s_userAddress){
+	        	userLocation=JSON.parse(s_userLocation);
+	        	userAddress=s_userAddress;
 	          q.resolve( {'loc':JSON.parse(s_userLocation), 'address': s_userAddress} );
-	        } else if(!userLocation){
+	        } else {
 	          $cordovaGeolocation
 	            .getCurrentPosition()
 	            .then(function(position) {
@@ -108,9 +114,11 @@ angular.module('govsafe.services', [])
 	              $http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+s_userLocation.latitude+','+s_userLocation.longitude ).then(function(response){
       				if(response.data.results && response.data.results.length > 0 && response.data.results[0].formatted_address){
       					//save to local storage
-      					window.localStorage.setItem('address', response.data.results[0].formatted_address);
+      					window.localStorage.setItem('address', response.data.results[0].formatted_address.toString());
       					s_userAddress=response.data.results[0].formatted_address;
+      					userAddress=s_userAddress;
       				}
+      				userLocation=s_userLocation;
 	              	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	              }, function(){
 	              	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
@@ -118,9 +126,6 @@ angular.module('govsafe.services', [])
 	          }, function(err) {
 	            q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	          });
-
-	        } else {
-	          q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	        }
 	        return q.promise;
       }

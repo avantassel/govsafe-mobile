@@ -34,7 +34,7 @@
                 </p>
                 <div class="list">
                   <label class="item item-input item-select">
-                    <select ng-options="dac.name for dac in dacs" ng-model="dac_selected">
+                    <select ng-options="dac.name+' ('+dac.distance+' away)' for dac in dacs" ng-model="dac_selected">
                         <option value="">Choose a Center</option>
                     </select>
                   </label>
@@ -47,7 +47,7 @@
           <ion-slide>
             <div class="box yellow"><h1>Step <span class="positive-bg positive-border step-count">3</span></h1>
                 <p>
-                    Let the {{dac_selected.name}} know when you will be arriving and complete the required for with your basic information.
+                    Let the {{dac_selected.name}} know when you will be arriving and complete the required form with your basic information.
                 </p>
                 <button ng-click="prevSlide()" class="button button-calm">Back</button>
                 <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD" data-mode="1" target="_self">Finish</a>

@@ -156,9 +156,10 @@ angular.module('govsafe.controllers', [])
             $scope.address = data.address;
         });
 
-        // UserService.getDAC().then(function(data){
-        //     $scope.dacs = data;
-        // });
+        UserService.getDAC().then(function(data){
+            $scope.dacs = data;
+        });
+
         function updateRefreshText(i){
             if(i==0)
                 $scope.refreshText = 'Pull to get your location...';
@@ -212,7 +213,7 @@ angular.module('govsafe.controllers', [])
             //update location
             if($ionicSlideBoxDelegate.currentIndex() == 0){
                 $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
-                UserService.locateUser().then(function(data){
+                UserService.locateUser(true).then(function(data){
                     $scope.loc = data.loc.latitude+','+data.loc.longitude;
                     $scope.address = data.address;
                     $scope.$broadcast('scroll.refreshComplete');
@@ -220,12 +221,12 @@ angular.module('govsafe.controllers', [])
                     $scope.$broadcast('scroll.refreshComplete');
                 });
             } else if($ionicSlideBoxDelegate.currentIndex() == 1){
-                // UserService.getDAC().then(function(data){
-                //     $scope.dacs = data;
-                //     $scope.$broadcast('scroll.refreshComplete');
-                // },function(){
-                //     $scope.$broadcast('scroll.refreshComplete');
-                // });
+                UserService.getDAC().then(function(data){
+                    $scope.dacs = data;
+                    $scope.$broadcast('scroll.refreshComplete');
+                },function(){
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
                 $scope.$broadcast('scroll.refreshComplete');
             } else if($ionicSlideBoxDelegate.currentIndex() == 2){
                 // TODO look up user status
