@@ -99,9 +99,71 @@
                         </div>
                     </div>
                 </div>
-                <button ng-click="prevSlide()" class="button button-stable">Back</button>
+        <!-- http://css-tricks.com/scroll-fix-content/ -->
+                <div class="list">
+                  <div class="item item-divider">
+                    Your Contact Info
+                  </div>
+                  <label class="item item-input">
+                    <input type="text" placeholder="Your Name" ng-model="user.name">
+                  </label>
+                  <label class="item item-input">
+                    <input type="text" placeholder="Your Email" ng-model="user.email">
+                  </label>
+                  <label class="item item-input">
+                    <input type="text" placeholder="Your Address" ng-model="user.address">
+                  </label>
+                  <label class="item item-input">
+                    <input type="text" placeholder="Your Mobile Number" ng-model="user.mobile">
+                  </label>
 
-                <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD?address={{address | escape}}&location={{loc}}&center={{dac_selected | escape}}" data-mode="1" target="_self">Finish</a>
+                  <div class="item item-divider">
+                    Assistance Needed?
+                  </div>
+                  <ul class="list">
+                    <li class="item item-toggle" ng-repeat="item in needs">
+                        {{item.name}}
+                        <label class="toggle toggle-positive"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedNeeds()">
+                            <div class="track"><div class="handle"></div></div>
+                        </label>
+                    </li>
+                  <ul>
+                  <div class="item item-divider">
+                    Do you have kids or pets?
+                  </div>
+                  <ul class="list">
+                    <li class="item item-toggle" ng-repeat="item in kids_pets">
+                        {{item.name}}
+                        <label class="toggle toggle-balanced"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedKidsPets()">
+                            <div class="track"><div class="handle"></div></div>
+                        </label>
+                    </li>
+                  <ul>
+
+                  <div class="item item-divider">
+                    What is your ETA?
+                  </div>
+                  <ul class="list">
+                    <li ng-repeat="item in eta">
+                        <label class="item item-radio">
+                        <input type="radio" name="group" value="{{item.name}}" ng-model="$parent.user.eta">
+                        <div class="item-content">
+                          {{item.name}}
+                        </div>
+                        <i class="radio-icon ion-checkmark"></i>
+                      </label>
+                    </li>
+                  <ul>
+              
+                  <label class="item item-input">
+                    <textarea placeholder="Comments" ng-model="user.comments"></textarea>
+                  </label>
+
+                </div>
+
+                <button ng-click="prevSlide()" class="button button-stable">Back</button>
+                <button ng-click="saveForm()" class="button button-balanced">Finish</button>
+
             </div>
           </ion-slide>
         </ion-slide-box>

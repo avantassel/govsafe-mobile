@@ -18,7 +18,7 @@ angular.module('govsafe.controllers', [])
         };
 
     })
-
+    
     .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
 
         $scope.civicIdLogin = function () {
@@ -92,16 +92,53 @@ angular.module('govsafe.controllers', [])
         });
     })
 
-    .controller('AssistanceCtrl', function ($scope, $sce, $stateParams, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
+    .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
         
+        $scope.needs = [
+            {name:'Health/Medical'}
+            ,{name:'Food Assistance'}
+            ,{name:'Material Assistance'}
+            ,{name:'Housing'}
+            ,{name:'Transportation'}
+            ,{name:'Clean-up/Re-building'}
+            ,{name:'Financial'}
+            ,{name:'Pets'}
+            ,{name:'Other'}
+        ];
+        $scope.kids_pets = [
+            {name:'1 Kid'}
+            ,{name:'2 Kids'}
+            ,{name:'3 Kids'}
+            ,{name:'4 or more Kids'}
+            ,{name:'1 Pet'}
+            ,{name:'2 Pets'}
+            ,{name:'3 Pets'}
+            ,{name:'4 or more Pets'}
+            ,{name:'Other'}
+        ];
+        $scope.eta = [
+            {name:'I am in line now'}
+            ,{name:'1 hr'}
+            ,{name:'2 hrs'}
+            ,{name:'3 hrs'}
+            ,{name:'4 hrs'}
+            ,{name:'5 hrs'}
+            ,{name:'6 hrs'}
+            ,{name:'Tomorrow'}
+            ,{name:'Other'}
+        ];
         $scope.step = 1;
-        $scope.dac_chosen = '';
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.dac_selected = '';
         $scope.dac_updated = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
         $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Andrew's Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11},{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
         $scope.refreshText = 'Pull to get your location...';
+        $scope.user = {};
+
+        UserService.getUser().then(function(data){
+            $scope.user = data;            
+        });
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
 
@@ -114,6 +151,11 @@ angular.module('govsafe.controllers', [])
             UserService.locateUser(refresh).then(function(data){
                 $scope.loc = data.loc.latitude+','+data.loc.longitude;
                 $scope.address = data.address;
+                
+                //save user vars
+                $scope.user.address = data.address;
+                $scope.user.loc = data.loc.latitude+','+data.loc.longitude;
+
                 $scope.$broadcast('scroll.refreshComplete');
             },function(){
                 $scope.$broadcast('scroll.refreshComplete');
@@ -167,6 +209,24 @@ angular.module('govsafe.controllers', [])
                 $scope.$broadcast('scroll.refreshComplete');
             }
         };
+
+        $scope.saveForm = function(){
+            //first validate form
+
+            UserService.saveUser($scope.user).then(function(data){
+                $cordovaDialogs.alert('Thanks for submitting your info', 'Complete', 'Close').then(function() {
+                  // callback success
+                });
+            });
+        };
+
+        $scope.selectedNeeds = function () {
+            $scope.user.needs = $filter('filter')($scope.needs, {checked: true});
+        }
+
+        $scope.selectedKidsPets = function () {
+            $scope.user.kids_pets = $filter('filter')($scope.kids_pets, {checked: true});
+        }
 
         $scope.locateUser();
         $scope.getDAC();

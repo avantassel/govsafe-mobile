@@ -1,8 +1,7 @@
 angular.module('govsafe.services', [])
 .service('UserService', function(API_VARS,$http,$q,$rootScope,$cordovaGeolocation) {
 
-	var userLocation = null, userAddress = null, redcross_locations = {};
-
+	var userLocation = null, userAddress = null, redcross_locations = {}, user = {};
 
 	return {
 	// getUser response
@@ -23,25 +22,30 @@ angular.module('govsafe.services', [])
 	//     "avatarUrl": "sample string 14"
 	// }
 		getUser: function (args){
-	      args.client_id = API_VARS.client_id;
-	      args.client_secret = API_VARS.client_secret;
-	      // args.token = '';
-	      args.lang='en';
+		  
+		  var q = $q.defer();
 
-	      var q = $q.defer();
-	     
-	     	//get token from LS
-	     	var token = window.localStorage.getItem('token');
-	     	// $http.defaults.headers.get['Authorization'] = token;
+		  if(user){
+		  	q.resolve( user );
+		  } else {
+		      args.client_id = API_VARS.client_id;
+		      args.client_secret = API_VARS.client_secret;
+		      // args.token = '';
+		      args.lang='en';
 
-	        $http.get(API_VARS.host+'/users/me',{params: args}).then(function(response){
+		     	//get token from LS
+		     	var token = window.localStorage.getItem('token');
+		     	// $http.defaults.headers.get['Authorization'] = token;
 
-	          q.resolve( response.data );
+		        $http.get(API_VARS.host+'/users/me',{params: args}).then(function(response){
 
-	        }, function(response){
-	          //throw error
-	          q.reject( );
-	        });
+		          q.resolve( response.data );
+
+		        }, function(response){
+		          //throw error
+		          q.reject( );
+		        });
+		    }
 	      
 	      return q.promise;
 	    },

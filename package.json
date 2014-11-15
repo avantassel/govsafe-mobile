@@ -1,7 +1,7 @@
 {
-  "name": "govsafetest",
+  "name": "GovSafe",
   "version": "1.0.0",
-  "description": "GOVSAFETEST: An Ionic project",
+  "description": "GovSafe is the Survivor Assistance Form Editor",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
