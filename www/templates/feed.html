@@ -47,10 +47,12 @@
           <ion-slide>
             <div class="box yellow"><h1>Step <span class="positive-bg positive-border step-count">3</span></h1>
                 <p>
-                    Let the {{dac_selected.name}} know when you will be arriving and complete the required form with your basic information.
+                    Let the "{{dac_selected.name}}" know when you will be arriving and complete the required form with your basic information.
                 </p>
-                <button ng-click="prevSlide()" class="button button-calm">Back</button>
-                <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD" data-mode="1" target="_self">Finish</a>
+             
+             <button ng-click="prevSlide()" class="button button-calm">Back</button>
+
+                <a class="typeform-share button button-balanced" id="start-form" href="https://avantassel.typeform.com/to/ToheBD?address={{address | escape}}&location={{loc}}&center={{dac_selected.name | escape}}" data-mode="1" target="_self">Finish</a>
             </div>
           </ion-slide>
         </ion-slide-box>

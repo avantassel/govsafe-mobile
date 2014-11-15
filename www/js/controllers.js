@@ -141,7 +141,7 @@ angular.module('govsafe.controllers', [])
         $scope.loc = ''; //loc=lat+','+lng;
         $scope.dac_selected = '';
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
-        $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
+        $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Andrew's Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11},{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
         $scope.refreshText = 'Pull to get your location...';
 
         var typeform = angular.element( document.querySelector( '#start-form' ) )
@@ -156,9 +156,9 @@ angular.module('govsafe.controllers', [])
             $scope.address = data.address;
         });
 
-        UserService.getDAC().then(function(data){
-            $scope.dacs = data;
-        });
+        // UserService.getDAC().then(function(data){
+        //     $scope.dacs = data;
+        // });
 
         function updateRefreshText(i){
             if(i==0)
@@ -176,14 +176,17 @@ angular.module('govsafe.controllers', [])
         $scope.nextSlide = function() {
             $ionicSlideBoxDelegate.next();
             updateRefreshText($ionicSlideBoxDelegate.currentIndex());
-            //update typeform href with vars
-            typeform.attr('href','https://avantassel.typeform.com/to/ToheBD?location='+$scope.loc+'&center='+$scope.dac_selected);
           }
 
         $scope.prevSlide = function() {
             $ionicSlideBoxDelegate.previous();
             updateRefreshText($ionicSlideBoxDelegate.currentIndex());
           }
+
+          $scope.$watch('dac_selected', function (newVal, oldVal) {
+                if(newVal)
+                    $scope.dac_selected=newVal;
+          });
 
         // $scope.show = function() {
         //     $scope.loading = $ionicLoading.show({
