@@ -2,98 +2,112 @@ angular.module('govsafe.controllers', [])
 
     .controller('AppCtrl', function ($scope, $state, OpenFB) {
 
-        $scope.logout = function () {
-            OpenFB.logout();
-            $state.go('app.login');
-        };
+        var auser = window.localStorage.getItem('accela_user');
 
-        $scope.revokePermissions = function () {
-            OpenFB.revokePermissions().then(
-                function () {
-                    $state.go('app.login');
-                },
-                function () {
-                    alert('Revoke permissions failed');
+        if(auser)
+            $scope.user = JSON.parse(auser);
+        
+    })
+    
+    .controller('LogoutCtrl', function ($scope, $state) {
+        window.localStorage.removeItem('token');
+        window.localStorage.removeItem('accela_user');
+    })
+
+    .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
+
+        // window.localStorage.setItem('token','lNRDT0VcQPKNS4rw6jGJky3OUlXHOGJFD3SGzyMpE-SzfGhbGmkLlTpzXOh5lFHFozq_GLnHhGa_8awORD-OV-bqtWOpxT_HSfqM5DcMFMMUREmU5lG7xEFt0grjFZFIcfnp8fW53AiTRNUrCoq4sRzwRYQLtL4dsz4lpQlKYh4mIyeJoEVl136yd0jEvCBIFaJqW4MoppS7jTm94PBu1uCKI5-UXcV3jS1tY_fmceKzqNhalocpqlu61lKdcqwlBkuFcb-tD3GGD8ATEWYmv7Pg1BxrKSK3SCb6znA1ILcp9jrtNhHaMzvF_KnAgRtpRWMb7lt7ENRpHwiWVkWZWuAyNXhJsGRbhGHRrotDk0hGIWjfvBrlJOEb0cJ300A0727Ujn_y4md-1pcwPrqcyw2');
+        $scope.access_token = window.localStorage.getItem('token');
+
+        // {
+        //     "result": {
+        //         "id": "7e708384-77d1-4f7e-a03e-170fbed64f31",
+        //         "loginName": "avantassel@gmail.com",
+        //         "email": "avantassel@gmail.com",
+        //         "firstName": "Andrew",
+        //         "lastName": "Tassel",
+        //         "streetAddress": "",
+        //         "avatarUrl": "https://accelauserprod.blob.core.windows.net/cloud-user-profile-images/7e708384-77d1-4f7e-a03e-170fbed64f31_normal.png"
+        //     }
+        // }
+
+        $scope.GetUserData = function() {
+        
+            $http.defaults.headers.get = {};
+            $http.defaults.headers.get['Content-Type'] = 'application/json';
+            $http.defaults.headers.get['Accept'] = 'application/json';
+            $http.defaults.headers.get['Authorization'] = $scope.access_token;
+            $http.defaults.headers.get['x-accela-appid'] = API_VARS.client_id;
+
+            $http({method: "get", url: API_VARS.host+"/civicid/profile?lang=en"})
+                .success(function(data) {
+
+                    if(data.result){
+                        data.result.name = data.result.firstName+''+data.result.lastName;
+                        window.localStorage.setItem('accela_user',JSON.stringify(data.result));
+                    }
+                    $state.go('app.profile');
+
+                })
+                .error(function(data, status) {
+
                 });
         };
 
-    })
-    
-    .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
-
-        $scope.civicIdLogin = function () {
+        $scope.Login = function() {
 
             $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
             $http.defaults.headers.post['x-accela-appid'] = API_VARS.client_id;
+            
+            var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
+            ref.addEventListener('loadstart', function(event) { 
+                if((event.url).startsWith("http://localhost:8100")) {
+                    requestToken = (event.url).split("code=")[1];
+                    $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + API_VARS.client_id + "&client_secret=" + API_VARS.client_secret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
+                        .success(function(data) {
+                            
+                            //set token to LS
+                            window.localStorage.setItem('token', data.access_token);
+                            $scope.access_token = data.access_token;
 
-            $scope.login = function() {
-                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
-                ref.addEventListener('loadstart', function(event) { 
-                    if((event.url).startsWith("http://localhost:8100")) {
-                        requestToken = (event.url).split("code=")[1];
-                        $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + API_VARS.client_id + "&client_secret=" + API_VARS.client_secret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
-                            .success(function(data) {
-                                //set token to LS
-                                window.localStorage.setItem('token', data.access_token);
+                            $scope.GetUserData();
 
-                                accessToken = data.access_token;
-                                //$location.path("/person");
-                                $http.defaults.headers.post['Content-Type'] = 'application/json';
-                                $http.defaults.headers.post['Accept'] = 'application/json';
-                                $http.defaults.headers.post['Authorization'] = accessToken;
-                                $http({method: "get", url: "https://apis.accela.com/v3/system/common/modules"})
-                                    .success(function(data) {
-                                        debugger;
-                                        $state.go('app.feed');
+                        })
+                        .error(function(data, status) {
+                            
+                            alert("ERROR2: "+ JSON.stringify(data));
 
-                                    })
-                                    .error(function(data, status) {
-                                        alert("ERROR: " + data);
-                                    });
-                            })
-                            .error(function(data, status) {
-                                
-                                var output = '';
-                                for (var property in data) {
-                                  output += property + ': ' + data[property]+'; ';
-                                }
-                                console.log(output);
-                                
-                                alert("ERROR: " + data);
+                        });
+                    ref.close();
+                }
+            });
+        };
 
-                            });
-                        ref.close();
-                    }
-                });
-            }
-         
-            if (typeof String.prototype.startsWith != 'function') {
-                String.prototype.startsWith = function (str){
-                    return this.indexOf(str) == 0;
-                };
-            }
-
-            // OpenFB.login('email,read_stream,publish_stream').then(
-            //     function () {
-            //         $location.path('/app/person/me/feed');
-            //     },
-            //     function () {
-            //         alert('OpenFB login failed');
-            //     });
-
-            $scope.login();
+        $scope.civicIdLogin = function () {
+            if($scope.access_token)
+                $scope.GetUserData();
+            else
+                $scope.Login();
         };
 
     })
 
     .controller('ProfileCtrl', function ($scope, OpenFB) {
-        OpenFB.get('/me').success(function (user) {
-            $scope.user = user;
-        });
+        var auser = window.localStorage.getItem('accela_user');
+
+        if(auser)
+            $scope.user = JSON.parse(auser);
     })
 
     .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
         
+        var auser = window.localStorage.getItem('accela_user');
+
+        if(auser)
+            $scope.user = JSON.parse(auser);
+        else
+            $scope.user = {};
+
         $scope.needs = [
             {name:'Health/Medical'}
             ,{name:'Food Assistance'}
@@ -134,19 +148,7 @@ angular.module('govsafe.controllers', [])
         $scope.address = $sce.trustAsHtml('<i class="icon ion-loading-d"></i>');
         $scope.dacs = [{"lat":44.37086,"lng":-100.353,"name":"Andrew's Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11},{"lat":44.37086,"lng":-100.353,"name":"Pierre First United Methodist Church","addr1":"117 N Central Ave","city":"PIERRE","state":"SD","zip":"57501","capacity":120,"population":11}];
         $scope.refreshText = 'Pull to get your location...';
-        $scope.user = {};
-
-        UserService.getUser().then(function(data){
-            $scope.user = data;            
-        });
-
-        var typeform = angular.element( document.querySelector( '#start-form' ) )
-
-        //TODO, wire this up or something
-        UserService.getUser({}).then(function(data){
-            console.log(data);
-        });
-
+        
         $scope.locateUser = function(refresh){
             UserService.locateUser(refresh).then(function(data){
                 $scope.loc = data.loc.latitude+','+data.loc.longitude;

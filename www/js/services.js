@@ -35,7 +35,6 @@ angular.module('govsafe.services', [])
 
 		     	//get token from LS
 		     	var token = window.localStorage.getItem('token');
-		     	// $http.defaults.headers.get['Authorization'] = token;
 
 		        $http.get(API_VARS.host+'/users/me',{params: args}).then(function(response){
 
