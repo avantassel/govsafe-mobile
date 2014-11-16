@@ -1,7 +1,8 @@
 angular.module('govsafe.controllers', [])
 
-    .controller('AppCtrl', function ($scope, $state, OpenFB) {
+    .controller('AppCtrl', function ($scope, $state) {
 
+        //get user for sidebar logic
         var auser = window.localStorage.getItem('accela_user');
 
         if(auser)
@@ -12,6 +13,7 @@ angular.module('govsafe.controllers', [])
     .controller('LogoutCtrl', function ($scope, $state) {
         window.localStorage.removeItem('token');
         window.localStorage.removeItem('accela_user');
+        $state.go('app.login');
     })
 
     .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
@@ -56,31 +58,41 @@ angular.module('govsafe.controllers', [])
 
         $scope.Login = function() {
 
-            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-            $http.defaults.headers.post['x-accela-appid'] = API_VARS.client_id;
+            $scope.fireLogin = function() {
+
+                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
+                ref.addEventListener('loadstart', function(event) { 
+                    if((event.url).startsWith("http://localhost:8100")) {
+                        requestToken = (event.url).split("code=")[1];
+
+                        $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                        $http.defaults.headers.post['x-accela-appid'] = API_VARS.client_id;
+                        $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + API_VARS.client_id + "&client_secret=" + API_VARS.client_secret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
+                            .success(function(data) {
+                                
+                                //set token to LS
+                                window.localStorage.setItem('token', data.access_token);
+                                $scope.access_token = data.access_token;
+
+                                $scope.GetUserData();
+
+                            })
+                            .error(function(data, status) {
+                                
+                                alert("ERROR2: "+ JSON.stringify(data));
+
+                            });
+                        ref.close();
+                    }
+                });
+            };
             
-            var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
-            ref.addEventListener('loadstart', function(event) { 
-                if((event.url).startsWith("http://localhost:8100")) {
-                    requestToken = (event.url).split("code=")[1];
-                    $http({method: "post", url: "https://apis.accela.com/oauth2/token", data: "client_id=" + API_VARS.client_id + "&client_secret=" + API_VARS.client_secret + "&redirect_uri=http%3A%2F%2Flocalhost%3A8100" + "&grant_type=authorization_code" + "&code=" + requestToken })
-                        .success(function(data) {
-                            
-                            //set token to LS
-                            window.localStorage.setItem('token', data.access_token);
-                            $scope.access_token = data.access_token;
-
-                            $scope.GetUserData();
-
-                        })
-                        .error(function(data, status) {
-                            
-                            alert("ERROR2: "+ JSON.stringify(data));
-
-                        });
-                    ref.close();
-                }
-            });
+            if (typeof String.prototype.startsWith != 'function') {
+                String.prototype.startsWith = function (str){
+                    return this.indexOf(str) == 0;
+                };
+            }
+            $scope.fireLogin();
         };
 
         $scope.civicIdLogin = function () {
@@ -92,11 +104,14 @@ angular.module('govsafe.controllers', [])
 
     })
 
-    .controller('ProfileCtrl', function ($scope, OpenFB) {
+    .controller('ProfileCtrl', function ($scope, $state) {
         var auser = window.localStorage.getItem('accela_user');
 
         if(auser)
             $scope.user = JSON.parse(auser);
+        else
+            $state.go('app.login');
+
     })
 
     .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
