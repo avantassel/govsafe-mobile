@@ -1,5 +1,5 @@
 angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','govsafe.controllers'])
-    .constant('API_VARS',{host:'https://apis.accela.com/v4',client_id:'635490299385961322',client_secret:'5ab5b9c806984bfb8f69f83cc7abf324'})
+    .constant('API_VARS',{host:'https://apis.accela.com/v4',client_id:'635496269291675545',client_secret:'2b74d010c6384f7f9dc3452904dfc3c9'})
     .filter('escape', function() {
         return window.escape;
     })

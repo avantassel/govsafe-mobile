@@ -60,7 +60,7 @@ angular.module('govsafe.controllers', [])
 
             $scope.fireLogin = function() {
 
-                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=TEST&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
+                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=Prod&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
                 ref.addEventListener('loadstart', function(event) { 
                     if((event.url).startsWith("http://localhost:8100")) {
                         requestToken = (event.url).split("code=")[1];
