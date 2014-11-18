@@ -238,9 +238,9 @@ angular.module('govsafe.controllers', [])
             //first validate form
 
             UserService.saveUser($scope.user).then(function(data){
-                $cordovaDialogs.alert('Thanks for submitting your info', 'Complete', 'Close').then(function() {
-                  $state.go('app.status');
-                });
+                $state.go('app.status');
+                // $cordovaDialogs.alert('Thanks for submitting your info', 'Complete', 'Close').then(function() {
+                // });
             });
         };
 
