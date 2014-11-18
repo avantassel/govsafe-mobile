@@ -119,7 +119,7 @@ angular.module('govsafe.controllers', [])
 
     })
 
-    .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicScrollDelegate, $ionicSlideBoxDelegate, UserService) {
+    .controller('AssistanceCtrl', function ($scope, $state, $filter, $sce, $stateParams, $cordovaDialogs, $ionicScrollDelegate, $ionicSlideBoxDelegate, UserService) {
         
         var auser = window.localStorage.getItem('accela_user');
 
@@ -239,7 +239,7 @@ angular.module('govsafe.controllers', [])
 
             UserService.saveUser($scope.user).then(function(data){
                 $cordovaDialogs.alert('Thanks for submitting your info', 'Complete', 'Close').then(function() {
-                  // callback success
+                  $state.go('app.status');
                 });
             });
         };

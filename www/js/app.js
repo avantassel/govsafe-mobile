@@ -69,6 +69,16 @@ angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','g
                 }
             })
 
+            .state('app.status', {
+                url: "/status",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/status.html",
+                        controller: "ProfileCtrl"
+                    }
+                }
+            })
+
             .state('app.assistance', {
                 url: "/assistance",
                 views: {
