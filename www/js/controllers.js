@@ -18,7 +18,9 @@ angular.module('govsafe.controllers', [])
 
     .controller('LoginCtrl', function ($scope, $state, $location, $http, API_VARS) {
 
-        // window.localStorage.setItem('token','lNRDT0VcQPKNS4rw6jGJky3OUlXHOGJFD3SGzyMpE-SzfGhbGmkLlTpzXOh5lFHFozq_GLnHhGa_8awORD-OV-bqtWOpxT_HSfqM5DcMFMMUREmU5lG7xEFt0grjFZFIcfnp8fW53AiTRNUrCoq4sRzwRYQLtL4dsz4lpQlKYh4mIyeJoEVl136yd0jEvCBIFaJqW4MoppS7jTm94PBu1uCKI5-UXcV3jS1tY_fmceKzqNhalocpqlu61lKdcqwlBkuFcb-tD3GGD8ATEWYmv7Pg1BxrKSK3SCb6znA1ILcp9jrtNhHaMzvF_KnAgRtpRWMb7lt7ENRpHwiWVkWZWuAyNXhJsGRbhGHRrotDk0hGIWjfvBrlJOEb0cJ300A0727Ujn_y4md-1pcwPrqcyw2');
+        // Used for debugging
+        // window.localStorage.setItem('token','KPxP89N8GB_95gadpjesVMsvlcWwVbCmMe7KoJ_rlCmbs3zIsEMarcDdKIJo4Dlm1bMo7gs-Zd4Z6nk_vr_-e7cYAm58uVthfP9-_ddDPk2kLb9-xrO1yc-jEJAoSjf1ByLgLOWbq8njLkTEUOyPwyUzSU1gmF2O12otWGAS7wAs08camnksaZD6cz_S2QdXMg6IBtS_pO5qhVNwNBTFo6Xtvt3bYzxEz4Cc7_pnGgKrdUZLd3uCAKeHd7ivAgV-0LtwVUavpsW8gIJBml7idnPEv-5CgM3PuRSreQtAe7JgzbFG24zwm76B4gE5vjzDjpeRZRT9vrkihuDWhEAXzY4g02BuTPEcCL-VH5TOn5WZyCek1Oi8SvbcQ3C8ZQw66JiNdoxEeho-kbTGN10vwRuR97TQd1rnhuY271AcZSk1');        
+
         $scope.access_token = window.localStorage.getItem('token');
 
         // {
@@ -105,6 +107,9 @@ angular.module('govsafe.controllers', [])
     })
 
     .controller('ProfileCtrl', function ($scope, $state) {
+
+        $scope.access_token = window.localStorage.getItem('token');
+
         var auser = window.localStorage.getItem('accela_user');
 
         if(auser)
