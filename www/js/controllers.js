@@ -194,6 +194,7 @@ angular.module('govsafe.controllers', [])
             },function(){
                 $scope.$broadcast('scroll.refreshComplete');
             });
+            $ionicScrollDelegate.scrollTop();
         }
 
         function updateRefreshText(i){
@@ -253,6 +254,6 @@ angular.module('govsafe.controllers', [])
         }
 
         $scope.locateUser();
-        $scope.getDAC();
+        $scope.getDAC();        
 
     });
