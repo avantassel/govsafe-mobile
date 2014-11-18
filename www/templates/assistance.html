@@ -70,7 +70,7 @@
 
                   <label class="item item-radio" ng-repeat="dac in dacs">
                     <input type="radio" name="center" ng-model="$parent.dac_selected" value="{{dac.name}}">
-                    <div class="item-content">
+                    <div class="item-content item-text-wrap">
                       <strong>{{dac.name}}</strong> 
                       <p><i ng-show="dac.distance"><br/>({{dac.distance}} away)</i>
                       <br/>{{dac.addr1}}, {{dac.city}}, {{dac.state}}
