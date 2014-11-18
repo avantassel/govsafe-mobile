@@ -16,4 +16,6 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+
+  <icon src="cordova/cordova_128.png"/>
 </widget>
