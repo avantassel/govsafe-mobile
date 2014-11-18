@@ -114,7 +114,7 @@ angular.module('govsafe.controllers', [])
 
     })
 
-    .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicLoading, $ionicSlideBoxDelegate, UserService) {
+    .controller('AssistanceCtrl', function ($scope, $filter, $sce, $stateParams, $cordovaDialogs, $ionicScrollDelegate, $ionicSlideBoxDelegate, UserService) {
         
         var auser = window.localStorage.getItem('accela_user');
 
@@ -207,11 +207,13 @@ angular.module('govsafe.controllers', [])
         $scope.nextSlide = function() {
             $ionicSlideBoxDelegate.next();
             updateRefreshText($ionicSlideBoxDelegate.currentIndex());
+            $ionicScrollDelegate.scrollTop();
           }
 
         $scope.prevSlide = function() {
-            $ionicSlideBoxDelegate.previous();
-            updateRefreshText($ionicSlideBoxDelegate.currentIndex());
+           $ionicSlideBoxDelegate.previous();
+           updateRefreshText($ionicSlideBoxDelegate.currentIndex());
+           $ionicScrollDelegate.scrollTop();
           }
         
         $scope.doRefresh = function(){
