@@ -1,4 +1,4 @@
-angular.module('govsafe.services', [])
+angular.module('govsafe.services', ['ngCordova'])
 .service('UserService', function(API_VARS,$http,$q,$rootScope,$cordovaGeolocation) {
 
 	var userLocation = null, userAddress = null, redcross_locations = {}, user = {};
@@ -104,6 +104,7 @@ angular.module('govsafe.services', [])
 	        //check local storage
 		    var s_userLocation = window.localStorage.getItem('location');
 		    var s_userAddress = window.localStorage.getItem('address');
+		    var options = {enableHighAccuracy : true,maximumAge : 3000,timeout : 60000};
 
 		    //if we have the location in storage use that
 	        if(!refresh && s_userLocation && s_userAddress){
@@ -111,12 +112,14 @@ angular.module('govsafe.services', [])
 	        	userAddress=s_userAddress;
 	          q.resolve( {'loc':JSON.parse(s_userLocation), 'address': s_userAddress} );
 	        } else {
+
 	          $cordovaGeolocation
-	            .getCurrentPosition()
+	            .getCurrentPosition(options)
 	            .then(function(position) {
 	              //save to local storage
 	              window.localStorage.setItem('location', JSON.stringify(position.coords));
 	              s_userLocation = position.coords;
+
 	              // get address
 	              // https://developers.google.com/maps/documentation/geocoding/#ReverseGeocoding
 	              $http.get('http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng='+s_userLocation.latitude+','+s_userLocation.longitude ).then(function(response){
@@ -132,7 +135,7 @@ angular.module('govsafe.services', [])
 	              	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	              });
 	          }, function(err) {
-	            q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
+	          	q.resolve( {'loc':s_userLocation,'address':s_userAddress} );
 	          });
 	        }
 	        return q.promise;

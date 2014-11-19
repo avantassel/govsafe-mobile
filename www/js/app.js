@@ -1,4 +1,4 @@
-angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','govsafe.controllers'])
+angular.module('govsafe', ['ionic', 'govsafe.services', 'govsafe.controllers'])
     .constant('API_VARS',{host:'https://apis.accela.com/v4',client_id:'635496269291675545',client_secret:'2b74d010c6384f7f9dc3452904dfc3c9'})
     .filter('escape', function() {
         return window.escape;
@@ -6,7 +6,7 @@ angular.module('govsafe', ['ionic', 'ngCordova', 'openfb', 'govsafe.services','g
     .filter('round', function() {
         return Math.round;
     })
-    .run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
+    .run(function ($rootScope, $state, $ionicPlatform, $window) {
 
         //OpenFB.init('594364694019603','http://localhost:8100/oauthcallback.html', $window.sessionStorage);
 
