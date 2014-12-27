@@ -8,7 +8,7 @@
       <a ng-show="!user.avatarUrl" ng-href="#/app/login" class="button button-light">Login</a>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" padding="true">
+    <ion-content has-header="true" padding="false">
 
         <ion-refresher
                 pulling-text="{{refreshText}}"
@@ -18,14 +18,14 @@
         <ion-slide-box show-pager="false" on-slide-changed="slideHasChanged($index)">
           <ion-slide>
             
-            <div class="item item-divider bar-dark">
-              <h1 class="title">Step <span class="positive-bg positive-border step-count">1</span></h1>
-            </div>
-            
-                <div class="list">
+            <div class="list">
+                    <div class="item item-divider">
+                      <h1 class="title">Step <span class="positive-bg positive-border step-count">1</span></h1>
+                    </div>
+                    
                     <div class="card">
                         <div class="item item-text-wrap">
-                            <br/>Let us locate you to find the nearest Disaster Assistance Centers.
+                            Let us locate you to find the nearest Disaster Assistance Centers.
                         </div>
                     </div>
                     <div class="card">
@@ -37,23 +37,26 @@
                         </div>
                       </div>
                 </div>
-                <button ng-click="nextSlide()" class="button button-balanced button-block">Start</button>
-            
+
+                <div class="button-bar">
+                  <button ng-click="nextSlide()" class="button button-balanced">Start</button>
+                </div>
           </ion-slide>
           <ion-slide>
-                <div class="item item-divider bar-dark">
+                <div class="list">
+
+                <div class="item item-divider">
                     <h1 class="title">Step <span class="positive-bg positive-border step-count">2</span></h1>
                 </div>
             
                 <div class="card">
                     <div class="item item-text-wrap">
-                        <br/>Choose a Disaster Assistance Centers near you.
+                        <br/>Choose a Disaster Assistance Center near you.
                         <p>Below are currently active RedCross centers that are available.</p>
                         <p>Updated: {{dac_updated}}</p>
                     </div>
                 </div>
 
-                <div class="list">
                   <!-- <label class="item item-input item-select">
                     <select ng-options="dac.name+' ('+dac.distance+' away)' for dac in dacs" ng-model="dac_selected">
                         <option value="">Choose a Center</option>
@@ -68,41 +71,44 @@
                     <i class="radio-icon ion-checkmark"></i>
                   </label>
 
-                  <label class="item item-radio" ng-repeat="dac in dacs">
+                  <label class="item item-radio" ng-repeat="dac in dacs track by dac._id">
                     <input type="radio" name="center" ng-model="$parent.dac_selected" value="{{dac.name}}">
                     <div class="item-content item-text-wrap">
-                      <strong>{{dac.name}}</strong> 
-                      <p><i ng-show="dac.distance"><br/>({{dac.distance}} away)</i>
-                      <br/>{{dac.addr1}}, {{dac.city}}, {{dac.state}}
-                      <br/><span ng-show="dac.population && dac.capacity">Capacity: {{dac.population}} / {{dac.capacity}} - {{(dac.population/dac.capacity)*100 | round}}%</span></p>
+                      <strong class="name">{{dac.name}}</strong>
+                      <br/><p>{{dac.addr1}}, {{dac.city}}, {{dac.state}} <i ng-show="dac.distance" class="distance"><br/>({{dac.distance}})</i></p>
+                      <p><span ng-show="dac.population && dac.capacity">Capacity: {{dac.population}} / {{dac.capacity}} - {{(dac.population/dac.capacity)*100 | round}}%</span></p>
                     </div>
                     <i class="radio-icon ion-checkmark"></i>
                   </label>
 
                 </div>
-                <button ng-click="prevSlide()" class="button button-stable button-block">Back</button>
-                <button ng-click="nextSlide()" class="button button-balanced button-block">Continue</button>
-            
+
+                <div class="button-bar">
+                  <button ng-click="prevSlide()" class="button button-stable">Back</button>
+                  <button ng-click="nextSlide()" class="button button-balanced">Continue</button>
+                </div>
+
           </ion-slide>
           <ion-slide>
-                <div class="item item-divider bar-dark">
+
+            <div class="list">
+
+                <div class="item item-divider">
                     <h1 class="title">Step <span class="positive-bg positive-border step-count">3</span></h1>
                 </div>
                 
-                <div class="list">
-                    <div class="card">
-                        <div class="item item-text-wrap" ng-show="dac_selected">
-                            <br/>Click Finish to complete the assistance form.
-                            <p>This will notify the <strong>"{{dac_selected}}"</strong> center of your needs and ETA.</p>
-                        </div>
-                        <div class="item item-text-wrap" ng-show="!dac_selected">
-                            <br/>Click Finish to complete the assistance form.
-                        </div>
+                <div class="card">
+                    <div class="item item-text-wrap" ng-show="dac_selected">
+                        Click Finish to complete the assistance form.
+                        <p>This will notify the <strong>"{{dac_selected}}"</strong> center of your needs and ETA.</p>
+                    </div>
+                    <div class="item item-text-wrap" ng-show="!dac_selected">
+                        <br/>Click Finish to complete the assistance form.
                     </div>
                 </div>
                 
                 <!-- http://css-tricks.com/scroll-fix-content/ -->
-                <div class="list">
+                
                   <div class="item item-divider">
                     Your Contact Info
                   </div>
@@ -122,50 +128,48 @@
                   <div class="item item-divider">
                     Assistance Needed?
                   </div>
-                  <ul class="list">
-                    <li class="item item-toggle" ng-repeat="item in needs">
-                        {{item.name}}
-                        <label class="toggle toggle-positive"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedNeeds()">
-                            <div class="track"><div class="handle"></div></div>
-                        </label>
-                    </li>
-                  <ul>
+                  
+                  <div class="item item-toggle" ng-repeat="item in needs">
+                      {{item.name}}
+                      <label class="toggle toggle-positive"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedNeeds()">
+                          <div class="track"><div class="handle"></div></div>
+                      </label>
+                  </div>
+                  
                   <div class="item item-divider">
                     Do you have kids or pets?
                   </div>
-                  <ul class="list">
-                    <li class="item item-toggle" ng-repeat="item in kids_pets">
-                        {{item.name}}
-                        <label class="toggle toggle-balanced"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedKidsPets()">
-                            <div class="track"><div class="handle"></div></div>
-                        </label>
-                    </li>
-                  <ul>
+                  
+                  <div class="item item-toggle" ng-repeat="item in kids_pets">
+                      {{item.name}}
+                      <label class="toggle toggle-balanced"><input type="checkbox" value="{{item.name}}" ng-model="item.checked" ng-change="selectedKidsPets()">
+                          <div class="track"><div class="handle"></div></div>
+                      </label>
+                  </div>
 
                   <div class="item item-divider">
                     What is your ETA?
                   </div>
-                  <ul class="list">
-                    <li ng-repeat="item in eta">
-                        <label class="item item-radio">
-                        <input type="radio" name="group" value="{{item.name}}" ng-model="$parent.user.eta">
-                        <div class="item-content">
-                          {{item.name}}
-                        </div>
-                        <i class="radio-icon ion-checkmark"></i>
-                      </label>
-                    </li>
-                  <ul>
+                  
+                  <div ng-repeat="item in eta">
+                      <label class="item item-radio">
+                      <input type="radio" name="group" value="{{item.name}}" ng-model="$parent.user.eta">
+                      <div class="item-content">
+                        {{item.name}}
+                      </div>
+                      <i class="radio-icon ion-checkmark"></i>
+                    </label>
+                  </div>
               
                   <label class="item item-input">
                     <textarea placeholder="Comments" ng-model="user.comments"></textarea>
                   </label>
 
                 </div>
-
-                <button ng-click="prevSlide()" class="button button-stable button-block">Back</button>
-                <button ng-click="saveForm()" class="button button-balanced button-block">Finish</button>
-            
+                <div class="button-bar">
+                  <button ng-click="prevSlide()" class="button button-stable">Back</button>
+                  <button ng-click="saveForm()" class="button button-balanced">Finish</button>
+                </div>
           </ion-slide>
         </ion-slide-box>
 

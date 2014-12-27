@@ -1,5 +1,9 @@
 /* Your app's CSS, go crazy, make it your own */
 
+.button-bar {
+  padding: 10px;
+}
+
 .ionic-logo {
   display: block;
   margin: 15px auto;
@@ -29,4 +33,17 @@
 }
 .item-select select{
 	max-width: 100%;
+}
+
+.name {
+  word-break: break-word;
+  white-space: initial;
+  letter-spacing: 0.2em;
+}
+
+.distance {
+  display: inline-block;
+  position: relative;
+  color: #666;
+  font-size: 12px;
 }

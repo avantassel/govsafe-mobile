@@ -21,7 +21,6 @@ angular.module('govsafe.controllers', [])
         // Used for debugging
         // window.localStorage.setItem('token','KPxP89N8GB_95gadpjesVMsvlcWwVbCmMe7KoJ_rlCmbs3zIsEMarcDdKIJo4Dlm1bMo7gs-Zd4Z6nk_vr_-e7cYAm58uVthfP9-_ddDPk2kLb9-xrO1yc-jEJAoSjf1ByLgLOWbq8njLkTEUOyPwyUzSU1gmF2O12otWGAS7wAs08camnksaZD6cz_S2QdXMg6IBtS_pO5qhVNwNBTFo6Xtvt3bYzxEz4Cc7_pnGgKrdUZLd3uCAKeHd7ivAgV-0LtwVUavpsW8gIJBml7idnPEv-5CgM3PuRSreQtAe7JgzbFG24zwm76B4gE5vjzDjpeRZRT9vrkihuDWhEAXzY4g02BuTPEcCL-VH5TOn5WZyCek1Oi8SvbcQ3C8ZQw66JiNdoxEeho-kbTGN10vwRuR97TQd1rnhuY271AcZSk1');        
 
-        $scope.redirect_uri = (document.location.host && document.location.host == 'm.govsafe.org')?'http://m.govsafe.org/#/app/login':'http://localhost:8100'
         $scope.access_token = window.localStorage.getItem('token');
 
         // {
@@ -63,9 +62,9 @@ angular.module('govsafe.controllers', [])
 
             $scope.fireLogin = function() {
 
-                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=Prod&redirect_uri='+$scope.redirect_uri+'&client_id=' + API_VARS.client_id, '_blank');
+                var ref = window.open('https://auth.accela.com/oauth2/authorize?response_type=code&environment=Prod&redirect_uri=http%3A%2F%2Flocalhost%3A8100&client_id=' + API_VARS.client_id, '_blank');
                 ref.addEventListener('loadstart', function(event) { 
-                    if((event.url).startsWith($scope.redirect_uri)) {
+                    if((event.url).startsWith("http://localhost:8100")) {
                         requestToken = (event.url).split("code=")[1];
 
                         $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
