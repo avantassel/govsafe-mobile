@@ -7,3 +7,6 @@ plugins/
 *.log
 !platforms/android/res
 !platforms/ios/GovSafe/Resources
+*.apk
+*.keystore
+keystore
