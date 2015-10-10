@@ -5,6 +5,7 @@ node_modules/
 platforms/
 plugins/
 cordova/
+www/lib/
 *.log
 !platforms/android/res
 !platforms/ios/GovSafe/Resources
